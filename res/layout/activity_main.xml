@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout android:id="@+id/contacts_list_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingRight="120dp">
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="@dimen/header_size">
+            <TextView android:id="@+id/add_sms" 
+                android:layout_width="@dimen/header_size"
+                android:layout_height="@dimen/header_size"
+                android:gravity="center"
+                android:text="@string/sms_add" />
+        </RelativeLayout>
+        <ListView android:id="@+id/contacts_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            />
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="@dimen/header_size">
+            
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/sms_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/header_size">
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="@dimen/header_size"
+            android:background="#fff">
+        </RelativeLayout>
+        <ListView android:id="@+id/sms_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:background="#fff"/>
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff">
+            <ImageView android:id="@+id/sms_send"
+                android:layout_width="@dimen/header_size"
+                android:layout_height="@dimen/header_size"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@android:drawable/ic_menu_send" />
+            <EditText android:id="@+id/sms_edit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/header_size"
+                android:layout_toLeftOf="@id/sms_send"
+                android:background="@null"/>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
