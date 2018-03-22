@@ -1,8 +1,10 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.21'
     ext.support_version = '26.1.0'
     ext.compileVersion = 26
     ext.buildVersion = '26.0.2'
+    ext.minSdk = 19
+    ext.targetSdk = 26
 
     repositories {
         jcenter()
@@ -23,8 +25,8 @@ android {
     buildToolsVersion buildVersion
 
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 26
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
         versionCode 1
         versionName "1.0"
     }
@@ -48,6 +50,7 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$support_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation project(':db')
+    implementation project(':permission')
 }
 
 repositories {

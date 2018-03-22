@@ -1,2 +1,2 @@
-include ':db'
+include ':db', ':permission'
 include ':'

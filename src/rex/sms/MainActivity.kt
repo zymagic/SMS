@@ -1,28 +1,33 @@
 package rex.sms
 
-import android.app.Activity
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.Telephony
+import android.support.v4.app.FragmentActivity
 import android.util.Log
+import com.zy.kotlinutil.permission.permission
 
 /**
  * Created by zy on 2018/3/22.
  */
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
-        if (checkUriPermission(Telephony.Sms.Conversations.CONTENT_URI, android.os.Process.myPid(), android.os.Process.myUid(), 0) != PackageManager.PERMISSION_GRANTED) {
-            grantUriPermission(packageName, Telephony.Sms.Conversations.CONTENT_URI, 0)
-            Log.e("XXXX", "no permission ")
-            return
-        }
+        permission(android.Manifest.permission.READ_SMS)
+                .onPermitted {
+                    Log.e("XXXX", "onPermitted")
+                    testCursor()
+                }
+                .onRefused {
+                    Log.e("XXXXX", "refused")
+                }
+    }
 
+    fun testCursor() {
         val c = contentResolver.query(Telephony.Sms.Conversations.CONTENT_URI, null, null, null, Telephony.Sms.Inbox.DEFAULT_SORT_ORDER)
         c!!.moveToFirst()
         val indexCount = c.columnCount
