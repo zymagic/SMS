@@ -1,7 +1,7 @@
-gen/
-bin/
+gen
+bin
 .idea
 .gradle
 gradle
 build
-local.properties
+/local.properties
