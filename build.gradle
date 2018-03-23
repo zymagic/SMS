@@ -42,6 +42,13 @@ android {
             assets.srcDirs = ['assets']
         }
     }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles 'proguard-project.txt'
+        }
+    }
 }
 
 dependencies {
