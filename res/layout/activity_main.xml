@@ -1,6 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<rex.sms.widget.SlideLayer xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:id="@+id/root">
 
     <LinearLayout android:id="@+id/contacts_list_panel"
         android:layout_width="match_parent"
@@ -24,7 +25,7 @@
     </LinearLayout>
 
     <FrameLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:id="@+id/current_contact"
       android:background="#fff"
@@ -44,15 +45,16 @@
             android:layout_height="match_parent"
             android:layout_below="@id/session_title_bar"
             android:layout_marginBottom="@dimen/header_size"/>
-        <include android:layout_width="match_parent"
+        <include layout="@layout/input_panel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:id="@+id/input_panel"
-            layout="@layout/input_panel"/>
+            android:id="@+id/input_panel" />
 
         <View android:layout_width="match_parent"
           android:layout_height="1px"
-          android:background="@color/window_background"/>
+          android:background="@color/window_background"
+          android:layout_above="@id/input_panel"/>
 
         <include android:id="@+id/session_option_bar"
           layout="@layout/session_option_layout"
@@ -61,4 +63,4 @@
           android:layout_below="@id/session_title_bar"
           android:visibility="gone"/>
     </RelativeLayout>
-</RelativeLayout>
+</rex.sms.widget.SlideLayer>
