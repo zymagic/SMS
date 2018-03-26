@@ -118,10 +118,15 @@ class ContactsListPresenter(activity: Activity) {
         }
 
         override fun onBind(model: SMSThread) {
-            val m = model.contacts[0]
-            val display = m.address.subSequence(0, max(1, m.address.length - 8))
-            thumb.text = display
-            full.text = m.address
+            model.display { displays, fulls ->
+                this@ContactPresenter.model?.let {
+                    if (model != it) {
+                        return@display
+                    }
+                    thumb.text = displays[0]
+                    full.text = fulls[0]
+                }
+            }
         }
     }
 }
