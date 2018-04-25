@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.2.31'
-    ext.support_version = '26.1.0'
+    ext.support_version = '27.1.1'
     ext.compileVersion = 26
     ext.buildVersion = '27.0.3'
     ext.minSdk = 19
@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -22,7 +22,6 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compileVersion
-    buildToolsVersion buildVersion
 
     defaultConfig {
         minSdkVersion minSdk
@@ -49,6 +48,7 @@ android {
             proguardFiles 'proguard-project.txt'
         }
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {

@@ -1,24 +1,38 @@
 package com.zy.kotlinutil.db
 
+import android.provider.BaseColumns
 import java.util.*
 
 /**
  * Created by zy on 18-3-22.
  */
-class Table(val name: String) {
-    lateinit var columns: Array<Column>
+class Table(val name: String, private val columns: Array<Column>) {
+
+    fun create() : String {
+        columns.joinToString()
+        return """
+            CREATE TABLE $name IF NOT EXISTS (
+                ${BaseColumns._ID} INTEGER PRIMARY KEY,
+                ${columns.joinToString()}
+            )
+        """
+    }
+
+    fun drop() : String {
+        return "DROP TABLE $name IF EXISTS"
+    }
 }
 
 class TableBuilder {
     var name: String? = null
-    var columns: ArrayList<Column> = ArrayList()
+    private var columns: ArrayList<Column> = ArrayList()
 
     fun column(f: ColumnBuilder.() -> Unit) {
         columns.add(ColumnBuilder().apply(f).build())
     }
 
-    fun column(name: String, type: ColumnType, modifier: ColumnModifier? = null) {
-        columns.add(Column(name, type).apply { this.modifier = modifier })
+    fun column(name: String, type: ColumnType, modifier: ColumnModifier = ColumnModifier.NONE) {
+        columns.add(Column(name, type, modifier))
     }
 
     fun build() : Table {
@@ -27,9 +41,7 @@ class TableBuilder {
         if (name == null || columns.size == 0) {
             throw IllegalArgumentException("Illegal table")
         }
-        val table = Table(name)
-        table.columns = columns.toArray(arrayOfNulls<Column>(0))
-        return table
+        return Table(name, columns.toTypedArray())
     }
 }
 
