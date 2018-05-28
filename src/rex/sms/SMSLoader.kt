@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.Telephony
+import com.zy.kotlinutil.db.*
 import rex.sms.model.SMSContact
 import rex.sms.model.SMSThread
 import rex.sms.utils.async
@@ -18,36 +19,25 @@ import kotlin.math.min
  */
 fun Context.loadThreads(f: (SMSThread) -> Unit) {
     async {
-        val cursor = contentResolver.query(
-                Telephony.Sms.Conversations.CONTENT_URI,
-                arrayOf(Telephony.Sms.Conversations.THREAD_ID),
-                null, null,
-                Telephony.Sms.Conversations.DEFAULT_SORT_ORDER
-        )
-        val threads = ArrayList<Int>()
-
-        while (cursor.moveToNext()) {
-            threads.add(cursor.getInt(0))
-        }
-
-        threads.forEach {
-            val c = contentResolver.query(
-                    Telephony.Sms.CONTENT_URI,
-                    arrayOf(Telephony.Sms.ADDRESS, Telephony.Sms.PERSON),
-                    "${Telephony.Sms.THREAD_ID} = $it", null,
-                    Telephony.Sms.DEFAULT_SORT_ORDER
-            )
-            val contactsMap = HashMap<String, Int>()
-            while (c.moveToNext()) {
-                contactsMap.put(c.getString(0), c.getInt(1))
+        db(Telephony.Sms.Conversations.CONTENT_URI)
+            .select(Telephony.Sms.Conversations.THREAD_ID)
+            .orderBy(Telephony.Sms.Conversations.DEFAULT_SORT_ORDER)
+            .exec {
+                getInt(0)
+            }.forEach {
+                val contactsMap = HashMap<String, Int>()
+                db(Telephony.Sms.CONTENT_URI)
+                        .select(Telephony.Sms.ADDRESS, Telephony.Sms.PERSON)
+                        .filter(Telephony.Sms.THREAD_ID eq it)
+                        .orderBy(Telephony.Sms.DEFAULT_SORT_ORDER)
+                        .exec {
+                            contactsMap.put(getString(0), getInt(1))
+                        }
+                    val contacts = contactsMap.map { SMSContact(it.key, it.value) }
+                    uiThread {
+                        f(SMSThread(it).apply { this.contacts.addAll(contacts) })
+                    }
             }
-
-            val contacts = contactsMap.map { SMSContact(it.key, it.value) }
-
-            uiThread {
-                f(SMSThread(it).apply { this.contacts.addAll(contacts) })
-            }
-        }
     }
 }
 
