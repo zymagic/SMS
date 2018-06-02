@@ -32,13 +32,21 @@ fun SqlQuery.orderBy(key: String): SqlQuery {
     return this
 }
 
-fun <T> SqlQuery.exec(f: Cursor.() -> T) : List<T> {
+fun <T> SqlQuery.map(f: Cursor.() -> T) : Iterable<T> {
     val cursor = query()
     val list = ArrayList<T>()
     while (cursor.moveToNext()) {
         list.add(f(cursor))
     }
     return list
+}
+
+fun <T> SqlQuery.fill(r: T, f: T.(Cursor) -> Unit) : T {
+    val cursor = query()
+    while (cursor.moveToNext()) {
+        r.f(cursor)
+    }
+    return r
 }
 
 fun SqlQuery.count(): Int {
@@ -56,7 +64,7 @@ fun SqlUpdate.filter(query: Q): SqlUpdate {
     return this
 }
 
-fun SqlUpdate.exec() : Int {
+fun SqlUpdate.map() : Int {
     return sql.context.contentResolver.update(sql.uri, values, where?.statement, null)
 }
 

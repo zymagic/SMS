@@ -22,21 +22,21 @@ fun Context.loadThreads(f: (SMSThread) -> Unit) {
         db(Telephony.Sms.Conversations.CONTENT_URI)
             .select(Telephony.Sms.Conversations.THREAD_ID)
             .orderBy(Telephony.Sms.Conversations.DEFAULT_SORT_ORDER)
-            .exec {
+            .map {
                 getInt(0)
             }.forEach {
-                val contactsMap = HashMap<String, Int>()
-                db(Telephony.Sms.CONTENT_URI)
-                        .select(Telephony.Sms.ADDRESS, Telephony.Sms.PERSON)
-                        .filter(Telephony.Sms.THREAD_ID eq it)
-                        .orderBy(Telephony.Sms.DEFAULT_SORT_ORDER)
-                        .exec {
-                            contactsMap.put(getString(0), getInt(1))
-                        }
-                    val contacts = contactsMap.map { SMSContact(it.key, it.value) }
-                    uiThread {
-                        f(SMSThread(it).apply { this.contacts.addAll(contacts) })
+                val contacts = db(Telephony.Sms.CONTENT_URI)
+                    .select(Telephony.Sms.ADDRESS, Telephony.Sms.PERSON)
+                    .filter(Telephony.Sms.THREAD_ID eq it)
+                    .orderBy(Telephony.Sms.DEFAULT_SORT_ORDER)
+                    .fill(HashMap<String, Int>()) {
+                        put(it.getString(0), it.getInt(1))
+                    }.map {
+                        SMSContact(it.key, it.value)
                     }
+                uiThread {
+                    f(SMSThread(it).apply { this.contacts.addAll(contacts) })
+                }
             }
     }
 }
