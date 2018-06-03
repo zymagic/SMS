@@ -1,2 +1,4 @@
-include ':db', ':permission', ':download'
+include ':db', ':permission', ':download', ':kotlin-utils'
 include ':'
+
+project(':kotlin-utils').projectDir = file('../KotlinUtils')

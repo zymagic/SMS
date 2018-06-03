@@ -5,12 +5,12 @@ import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.Telephony
 import com.zy.kotlinutil.db.*
+import com.zy.kotlinutils.core.async
+import com.zy.kotlinutils.core.uiThread
 import rex.sms.model.SMSContact
 import rex.sms.model.SMSThread
-import rex.sms.utils.async
 import rex.sms.utils.saveStringPref
 import rex.sms.utils.stringPref
-import rex.sms.utils.uiThread
 import kotlin.math.max
 import kotlin.math.min
 
