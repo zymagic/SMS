@@ -1,6 +1,7 @@
 package rex.sms
 
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.Telephony
@@ -23,19 +24,19 @@ fun Context.loadThreads(f: (SMSThread) -> Unit) {
             .select(Telephony.Sms.Conversations.THREAD_ID)
             .orderBy(Telephony.Sms.Conversations.DEFAULT_SORT_ORDER)
             .map {
-                getInt(0)
-            }.forEach {
+                this.getInt(0)
+            }.forEach {threadId: Int ->
                 val contacts = db(Telephony.Sms.CONTENT_URI)
                     .select(Telephony.Sms.ADDRESS, Telephony.Sms.PERSON)
-                    .filter(Telephony.Sms.THREAD_ID eq it)
+                    .filter(Telephony.Sms.THREAD_ID eq threadId)
                     .orderBy(Telephony.Sms.DEFAULT_SORT_ORDER)
-                    .fill(HashMap<String, Int>()) {
+                    .fill(HashMap<String, Int>()) { it: Cursor ->
                         put(it.getString(0), it.getInt(1))
-                    }.map {
-                        SMSContact(it.key, it.value)
+                    }.map { entry: Map.Entry<String, Int> ->
+                        SMSContact(entry.key, entry.value)
                     }
                 uiThread {
-                    f(SMSThread(it).apply { this.contacts.addAll(contacts) })
+                    f(SMSThread(threadId).apply { this.contacts.addAll(contacts) })
                 }
             }
     }
@@ -93,14 +94,13 @@ private fun SMSContact.displayDefault(resolve: Boolean = false): Pair<String, St
 
 private fun SMSContact.displayNormal(name: String): Pair<String, String> {
     val display = name.thumb()
-    val full = name
     displayName = display
-    fullName = full
+    fullName = name
     resolved = true
-    return display to full
+    return display to name
 }
 
-fun SMSThread.display(f: (Array<String>, Array<String>) -> Unit) {
+fun SMSThread.display(act: (Array<String>, Array<String>) -> Unit) {
     val display = ArrayList<String>(contacts.size)
     val full = ArrayList<String>(contacts.size)
 
@@ -119,7 +119,7 @@ fun SMSThread.display(f: (Array<String>, Array<String>) -> Unit) {
     val da = display.toTypedArray()
     val fa = full.toTypedArray()
 
-    f(da, fa)
+    act(da, fa)
 
     if (needResolve) {
         async {
@@ -130,7 +130,7 @@ fun SMSThread.display(f: (Array<String>, Array<String>) -> Unit) {
             }
 
             uiThread {
-                f(da, fa)
+                act(da, fa)
             }
         }
     }

@@ -11,7 +11,7 @@ class Sql(internal val context: Context, internal val uri: Uri)
 
 fun Sql.withId(id: String) = Sql(context, Uri.withAppendedPath(uri, id))
 
-class SqlQuery(val sql: Sql, val projection: Array<out String>?) {
+class SqlQuery(private val sql: Sql, private val projection: Array<out String>?) {
     internal var where: Q? = null
     internal var order: String? = null
     fun query(): Cursor {
@@ -32,16 +32,16 @@ fun SqlQuery.orderBy(key: String): SqlQuery {
     return this
 }
 
-fun <T> SqlQuery.map(f: Cursor.() -> T) : Iterable<T> {
+inline fun <reified T> SqlQuery.map(f: Cursor.() -> T) : List<T> {
     val cursor = query()
-    val list = ArrayList<T>()
+    val list = ArrayList<T>(10)
     while (cursor.moveToNext()) {
-        list.add(f(cursor))
+        list.add(cursor.f())
     }
     return list
 }
 
-fun <T> SqlQuery.fill(r: T, f: T.(Cursor) -> Unit) : T {
+inline fun <T> SqlQuery.fill(r: T, f: T.(Cursor) -> Unit) : T {
     val cursor = query()
     while (cursor.moveToNext()) {
         r.f(cursor)
