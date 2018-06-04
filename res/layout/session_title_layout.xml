@@ -4,4 +4,30 @@
               android:layout_width="match_parent"
               android:layout_height="@dimen/header_size">
 
+    <TextView
+        android:id="@+id/session_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:layout_toLeftOf="@id/title_more"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/title_more"
+        android:layout_width="@dimen/header_size"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:layout_alignParentRight="true" />
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/window_background"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

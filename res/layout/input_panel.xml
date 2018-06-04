@@ -20,5 +20,5 @@
              android:layout_height="@dimen/header_size"
              android:layout_gravity="bottom"
              android:scaleType="centerInside"
-             android:src="@android:drawable/ic_menu_send" />
+             android:src="@drawable/icon_send" />
 </LinearLayout>

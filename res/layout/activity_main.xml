@@ -10,11 +10,11 @@
         android:paddingRight="120dp">
         <RelativeLayout android:layout_width="match_parent"
             android:layout_height="@dimen/header_size">
-            <TextView android:id="@+id/add_sms" 
+            <ImageView android:id="@+id/add_sms"
                 android:layout_width="@dimen/header_size"
                 android:layout_height="@dimen/header_size"
-                android:gravity="center"
-                android:text="@string/sms_add" />
+                android:src="@drawable/icon_add"
+                android:scaleType="centerInside"/>
         </RelativeLayout>
         <android.support.v7.widget.RecyclerView android:id="@+id/contacts_list"
             android:layout_width="match_parent"
@@ -44,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/session_title_bar"
-            android:layout_marginBottom="@dimen/header_size"/>
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="@dimen/header_size" />
         <include layout="@layout/input_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

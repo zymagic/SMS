@@ -14,7 +14,7 @@ class CircleBackground : Drawable() {
     private val point = PointF()
 
     init {
-        paint.color = 0xff666666.toInt()
+        paint.color = 0xff999999.toInt()
         paint.style = Paint.Style.FILL
     }
 

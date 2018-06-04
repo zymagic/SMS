@@ -17,6 +17,17 @@ abstract class RecyclerAdapter<T>(context: Context) : RecyclerView.Adapter<Recyc
     abstract fun getLayoutResource(): Int
     abstract fun onCreatePresenter() : RecyclerPresenter<T>
 
+    fun setItems(items: List<T>) {
+        this.items.clear()
+        this.items.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    fun addItems(items: List<T>) {
+        this.items.addAll(items)
+        notifyDataSetChanged()
+    }
+
     fun addItem(item: T) {
         items.add(item)
         notifyDataSetChanged()
@@ -29,6 +40,8 @@ abstract class RecyclerAdapter<T>(context: Context) : RecyclerView.Adapter<Recyc
             notifyItemRemoved(index)
         }
     }
+
+    fun getItem(index: Int) = items[index]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<T> {
         val view = inflater.inflate(getLayoutResource(), parent, false)

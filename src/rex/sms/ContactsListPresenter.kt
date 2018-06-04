@@ -7,6 +7,8 @@ import android.support.v7.widget.OrientationHelper
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import rex.sms.loader.display
+import rex.sms.loader.loadContacts
 import rex.sms.model.SMSThread
 import rex.sms.widget.CircleBackground
 import rex.sms.widget.RecyclerAdapter
@@ -42,11 +44,12 @@ class ContactsListPresenter(activity: Activity) {
         })
     }
 
-    fun addThread(item: SMSThread) {
-        if (adapter.itemCount == 0) {
-            indicator.bind(item)
+    fun addThreads(items: List<SMSThread>) {
+        if (adapter.itemCount == 0 && items.isNotEmpty()) {
+            indicator.bind(items[0])
+            onSelectionChanged?.invoke(0, items[0])
         }
-        adapter.addItem(item)
+        adapter.addItems(items)
     }
 
     fun onScrollChanged(f: () -> Unit) {
@@ -118,13 +121,13 @@ class ContactsListPresenter(activity: Activity) {
         }
 
         override fun onBind(model: SMSThread) {
-            model.display { displays, fulls ->
+            model.loadContacts { displays, thumbs ->
                 this@ContactPresenter.model?.let {
                     if (model != it) {
-                        return@display
+                        return@loadContacts
                     }
-                    thumb.text = displays[0]
-                    full.text = fulls[0]
+                    thumb.text = thumbs[0]
+                    full.text = displays[0]
                 }
             }
         }
