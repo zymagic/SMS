@@ -31,6 +31,18 @@ fun Context.loadThreads(f: (List<SMSThread>) -> Unit) {
     }
 }
 
+fun SMSThread.loadReads(f: (Boolean) -> Unit) {
+    async {
+        App.app.db(Telephony.Sms.CONTENT_URI)
+                .select(Telephony.Sms._ID)
+                .filter((Telephony.Sms.THREAD_ID eq id) and (Telephony.Sms.READ eq 0))
+                .count()
+                .uiThreadCall {
+                    f(this > 0)
+                }
+    }
+}
+
 fun SMSThread.loadContacts(f: (displays: List<String>, thumbs: List<String>) -> Unit) {
     if (state != SMSThread.STATE_INIT) {
         if (state == SMSThread.STATE_LOADED) {

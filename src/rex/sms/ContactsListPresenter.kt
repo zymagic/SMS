@@ -7,8 +7,12 @@ import android.support.v7.widget.OrientationHelper
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import com.zy.kotlinutils.core.clamp
+import com.zy.kotlinutils.core.schedule
+import com.zy.kotlinutils.core.uiThread
 import rex.sms.loader.display
 import rex.sms.loader.loadContacts
+import rex.sms.loader.loadReads
 import rex.sms.model.SMSThread
 import rex.sms.widget.CircleBackground
 import rex.sms.widget.RecyclerAdapter
@@ -63,9 +67,11 @@ class ContactsListPresenter(activity: Activity) {
     private fun snap(position: Int) {
         var holder = recyclerView.findViewHolderForAdapterPosition(position)
         if (holder == null || holder.itemView.parent == null) {
+            val first = if (recyclerView.childCount == 0) 0 else recyclerView.getChildAdapterPosition(recyclerView.getChildAt(0))
+            indicator.view.translationY = (if (position <= first) 0 else recyclerView.height - indicator.view.height).toFloat()
             return
         }
-        val tarY = min(max(0, holder.itemView.top), recyclerView.height - holder.itemView.height)
+        val tarY = holder.itemView.top.clamp(0, recyclerView.height - holder.itemView.height)
         indicator.view.translationY = tarY.toFloat()
     }
 
@@ -111,16 +117,23 @@ class ContactsListPresenter(activity: Activity) {
     private class ContactPresenter : RecyclerPresenter<SMSThread>() {
         lateinit var thumb: TextView
         lateinit var full: TextView
+        lateinit var tip: View
         lateinit var background: CircleBackground
 
         override fun onCreate(view: View) {
             thumb = view.findViewById(R.id.thumb)
             full = view.findViewById(R.id.full)
+            tip = view.findViewById(R.id.unread)
             background = CircleBackground()
             thumb.background = background
         }
 
         override fun onBind(model: SMSThread) {
+            if (model.state == SMSThread.STATE_LOADING) {
+                schedule(100) {
+                    uiThread {onBind(model) }
+                }
+            }
             model.loadContacts { displays, thumbs ->
                 this@ContactPresenter.model?.let {
                     if (model != it) {
@@ -128,6 +141,15 @@ class ContactsListPresenter(activity: Activity) {
                     }
                     thumb.text = thumbs[0]
                     full.text = displays[0]
+                }
+            }
+            tip.visibility = View.INVISIBLE
+            model.loadReads {u ->
+                this@ContactPresenter.model?.let {
+                    if (model != it) {
+                        return@loadReads
+                    }
+                    tip.visibility = if (u) View.VISIBLE else View.INVISIBLE
                 }
             }
         }

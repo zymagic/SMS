@@ -9,6 +9,8 @@ class SMSThread(val id: Int) {
     val displays = ArrayList<String>()
     val contents = ArrayList<SMSText>()
 
+    var unread = true
+
     var state: Int = STATE_INIT
 
     companion object {

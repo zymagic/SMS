@@ -17,7 +17,7 @@ class ScaleText(context: Context, attributeSet: AttributeSet) : TextView(context
         eWidth = paint.measureText("0")
         paint.getFontMetrics(fontMetrics)
         myPaint.set(paint)
-        myPaint.color = paint.color
+        myPaint.color = textColors.defaultColor
         myPaint.textSize = paint.textSize
         myPaint.style = paint.style
         myPaint.textAlign = Paint.Align.CENTER
@@ -34,9 +34,6 @@ class ScaleText(context: Context, attributeSet: AttributeSet) : TextView(context
             super.onDraw(canvas)
             return
         }
-        myPaint.color = paint.color
-        myPaint.textSize = paint.textSize
-        myPaint.style = paint.style
         val scale = space / desired
         canvas.save()
         canvas.scale(scale, scale, width / 2f, height / 2f)
