@@ -1,11 +1,10 @@
 package rex.sms.model
 
+import rex.sms.loader.canonicalAddress
+
 /**
  * Created by zy on 2018/3/23.
  */
 class SMSContact(val address: String, val person: Int) {
-    var resolved = false
-
-    var displayName: String? = null
-    var fullName: String? = null
+    val canonicalAddress = address.canonicalAddress()
 }

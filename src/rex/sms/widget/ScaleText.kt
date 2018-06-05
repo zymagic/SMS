@@ -13,8 +13,7 @@ class ScaleText(context: Context, attributeSet: AttributeSet) : TextView(context
     private val fontMetrics = Paint.FontMetrics()
     private val myPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    init {
         eWidth = paint.measureText("0")
         paint.getFontMetrics(fontMetrics)
         myPaint.set(paint)

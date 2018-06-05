@@ -23,5 +23,5 @@
         android:gravity="center_vertical|left"
         android:textColor="#333"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 </LinearLayout>

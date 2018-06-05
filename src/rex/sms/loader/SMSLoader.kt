@@ -8,11 +8,6 @@ import rex.sms.model.SMSThread
 import kotlin.math.max
 import kotlin.math.min
 
-
-internal const val THREAD_PREF_PREFIX = "THREAD_"
-internal const val ADDRESS_PREF_PREFIX = "ADDRESS_"
-internal const val PERSON_PREF_PREFIX = "PERSON_"
-
 internal fun String.thumb(): String {
     val c = get(0).toInt()
     return if ((c and 0xff) != 0 && ((c ushr 4) and 0xff) != 0) {
@@ -38,4 +33,16 @@ fun SMSThread.loadText(): List<SMSText> {
             .map {
                 SMSText(id, getString(1), getLong(0), getInt(2) == 1)
             }
+}
+
+fun String.trimAddress() = replace("[- ]", "")
+
+fun String.canonicalAddress() = with(trimAddress()) {
+    when (length) {
+        11 -> this
+        14 -> if (this.startsWith('+')) substring(3) else this
+        15 -> if (this.startsWith('0')) substring(4) else this
+        16 -> if (this.startsWith('1')) substring(5) else this
+        else -> this
+    }
 }

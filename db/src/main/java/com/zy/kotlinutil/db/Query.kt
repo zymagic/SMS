@@ -10,7 +10,7 @@ infix fun <K, T> K.lt(value: T) = Q("$this < $value")
 infix fun <K, T> K.lte(value: T) = Q("$this <= $value")
 infix fun <K, T> K.eq(value: T) = Q("$this = $value")
 infix fun <K, T> K.ne(value: T) = Q("$this <> $value")
-infix fun <K, T> K._in(value: Iterable<T>) = "$this IN ${value.joinToString(",", "(", ")")}"
+infix fun <K, T> K._in(value: Iterable<T>) = Q("$this IN ${value.joinToString(",", "(", ")")}")
 
 infix fun Q.and(other: Q) = Q("($statement) AND (${other.statement})")
 infix fun Q.or(other: Q) = Q("$statement OR ${other.statement}")
